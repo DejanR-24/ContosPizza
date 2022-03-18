@@ -70,8 +70,12 @@ public class PizzasController : ControllerBase
             return NotFound();
 
         }
+
+
+        _backupService.SavePizzaToFile(pizza);
+
         
-        _backupService.SavePizzaToBlob(pizza);
+        //_backupService.SavePizzaToBlob(pizza);
         //_backupService.SavePizza(pizza);
 
         await  _pizzasService.RemoveAsync(id);
