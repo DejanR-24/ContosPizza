@@ -2,31 +2,52 @@
 using ContoPizzaApi.Models;
 using System.Text.Json;
 using Azure.Storage.Blobs;
+using Microsoft.Extensions.Options;
 
 namespace ContoPizzaApi.Services
 {
     public class MemoryPizzaServiceAzureBlob : IBackupService
     {
-            public static int backupCount = 0;
-            string connectionString = Environment.GetEnvironmentVariable("AZURE_STORAGE_CONNECTION_STRING");
-        public void SavePizzaToBlob(Pizza pizzaToSave)
+        private readonly IOptions<AzureSettings> azureSettings;
+
+        public MemoryPizzaServiceAzureBlob(IOptions<AzureSettings> azureSettings)
         {
-            string filePath = @"C:\Users\dejan\OneDrive\Desktop\Dex\mojiProjekti\dotNET\memory\"; //Directory.GetCurrentDirectory
-            string jsonString = JsonSerializer.Serialize(pizzaToSave);
-            string fileName = "deleted_pizza_" + backupCount + ".json";
-            backupCount++;
+            this.azureSettings = azureSettings;
+            
+        }
+        public async void SavePizzaToBlob(Pizza pizza)
+        {
+
+
+            string connectionString = azureSettings.Value.ConnectionURI;
+            string containerName = azureSettings.Value.ContainerName;
+            BlobContainerClient containerClient = new BlobContainerClient(connectionString, containerName);
+            containerClient.CreateIfNotExists();
+
+            string filePath = @".\DeletedPizzas\"; 
+            string jsonString = JsonSerializer.Serialize(pizza);
+            string fileName = "deletedpizza" + Guid.NewGuid().ToString() + ".json";
+       
             File.WriteAllText(filePath + fileName, jsonString);
+
+            BlobClient blobClient = containerClient.GetBlobClient(fileName);
+            await blobClient.UploadAsync(filePath + fileName, true);
+
+
+            
+            
+
         }
 
         void IBackupService.SavePizza(Pizza pizza)
         {
-            throw new NotImplementedException();
+            return;
         }
 
 
         void IBackupService.SavePizzaToFile(Pizza pizza)
         {
-            throw new NotImplementedException();
+            return;
         }
     }
 }

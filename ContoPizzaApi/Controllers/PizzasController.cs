@@ -68,9 +68,11 @@ public class PizzasController : ControllerBase
         if (pizza is null)
         {
             return NotFound();
-        }
 
-        _backupService.SavePizza(pizza);
+        }
+        
+        _backupService.SavePizzaToBlob(pizza);
+        //_backupService.SavePizza(pizza);
 
         await  _pizzasService.RemoveAsync(id);
 

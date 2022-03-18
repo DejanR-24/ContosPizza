@@ -10,7 +10,7 @@ public class MemoryPizzaService : IBackupService
 
     public void SavePizza(Pizza pizzaToSave)
     {
-        string filePath = @"C:\Users\dejan\OneDrive\Desktop\Dex\mojiProjekti\dotNET\memory\"; //Directory.GetCurrentDirectory
+        string filePath = @".\DeletedPizzas\";
         string jsonString = JsonSerializer.Serialize(pizzaToSave);
         string fileName = "deleted_pizza_" + backupCount + ".json";
         backupCount++;
@@ -19,11 +19,11 @@ public class MemoryPizzaService : IBackupService
 
     void IBackupService.SavePizzaToBlob(Pizza pizza)
     {
-        throw new NotImplementedException();
+        return;
     }
 
     void IBackupService.SavePizzaToFile(Pizza pizza)
     {
-        throw new NotImplementedException();
+        return;
     }
 }

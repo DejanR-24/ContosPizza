@@ -2,8 +2,6 @@
 using Microsoft.Extensions.Options;
 using MongoDB.Driver;
 
-using System.Text.Json;
-using System.Text.Json.Serialization;
 
 namespace ContoPizzaApi.Services;
 
