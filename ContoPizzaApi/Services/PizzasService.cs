@@ -2,23 +2,26 @@
 using Microsoft.Extensions.Options;
 using MongoDB.Driver;
 
+using System.Text.Json;
+using System.Text.Json.Serialization;
+
 namespace ContoPizzaApi.Services;
 
-public class PizzasService
+public class PizzasService 
 {
     private readonly IMongoCollection<Pizza> _pizzasCollection;
 
     public PizzasService(
-        IOptions<ContosPizzaDatabaseSettings> contosPizzaDatabaseSettings)
+        IOptions<MongoDBSettings> mongoDBSettings)
     {
         var mongoClient = new MongoClient(
-            contosPizzaDatabaseSettings.Value.ConnectionString);
+            mongoDBSettings.Value.ConnectionURI);
 
         var mongoDatabase = mongoClient.GetDatabase(
-            contosPizzaDatabaseSettings.Value.DatabaseName);
+            mongoDBSettings.Value.DatabaseName);
 
         _pizzasCollection = mongoDatabase.GetCollection<Pizza>(
-           contosPizzaDatabaseSettings.Value.PizzasCollectionName);
+           mongoDBSettings.Value.CollectionName);
     }
     public async Task<List<Pizza>> GetAsync() =>
         await _pizzasCollection.Find(_ => true).ToListAsync();
@@ -34,4 +37,6 @@ public class PizzasService
 
     public async Task RemoveAsync(string id) =>
         await _pizzasCollection.DeleteOneAsync(x => x.Id == id);
+
+    
 }
