@@ -17,8 +17,8 @@ public class SandwitchService
         var mongoDatabase = mongoClient.GetDatabase(
             mongoDBSettings.Value.DatabaseName);
 
-       _sandwitchCollection = mongoDatabase.GetCollection<Sandwitch>(
-           mongoDBSettings.Value.CollectionName);
+        _sandwitchCollection = mongoDatabase.GetCollection<Sandwitch>(
+            mongoDBSettings.Value.CollectionNameSandwitch);
     }
     public async Task<List<Sandwitch>> GetAsync() =>
         await _sandwitchCollection.Find(_ => true).ToListAsync();

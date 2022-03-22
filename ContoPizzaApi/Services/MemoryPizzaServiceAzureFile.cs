@@ -7,7 +7,7 @@ using Azure;
 
 namespace ContoPizzaApi.Services;
 
-public class MemoryPizzaServiceAzureFile : IBackupService
+public class MemoryPizzaServiceAzureFile : IBackupServiceFile
 {
 
     private readonly IOptions<AzureSettings> azureSettings;
@@ -17,7 +17,7 @@ public class MemoryPizzaServiceAzureFile : IBackupService
         this.azureSettings = azureSettings;
 
     }
-    public async void SavePizzaToFile(Pizza pizza)
+    public void SavePizzaToFile(Pizza pizza)
     {
 
 
@@ -30,9 +30,9 @@ public class MemoryPizzaServiceAzureFile : IBackupService
         ShareDirectoryClient directory = shareClient.GetDirectoryClient(directoryName);
         directory.CreateIfNotExists();
 
-        string filePath = @".\DeletedPizzas\";
+        string filePath = @".\Deleted\Pizza\";
         string jsonString = JsonSerializer.Serialize(pizza);
-        string fileName = "deletedpizza" + Guid.NewGuid().ToString() + ".json";
+        string fileName = "deleted_Pizza" + Guid.NewGuid().ToString() + ".json";
 
         File.WriteAllText(filePath + fileName, jsonString);
 
@@ -50,13 +50,5 @@ public class MemoryPizzaServiceAzureFile : IBackupService
 
     }
 
-    void IBackupService.SavePizza(Pizza pizza)
-    {
-        return;
-    }
 
-    void IBackupService.SavePizzaToBlob(Pizza pizza)
-    {
-        return;
-    }
 }

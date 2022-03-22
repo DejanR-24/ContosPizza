@@ -6,5 +6,9 @@ public class MongoDBSettings
 
     public string DatabaseName { get; set; } = null!;
 
-    public string CollectionName { get; set; } = null!;
+    public string CollectionNamePizza { get; set; } = null!;
+
+    public string CollectionNameSandwitch { get; set; } = null!;
+
+    public string CollectionNameBeverage { get; set; } = null!;
 }

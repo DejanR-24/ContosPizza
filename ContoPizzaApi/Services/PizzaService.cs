@@ -5,11 +5,11 @@ using MongoDB.Driver;
 
 namespace ContoPizzaApi.Services;
 
-public class PizzasService 
+public class PizzaService 
 {
     private readonly IMongoCollection<Pizza> _pizzasCollection;
 
-    public PizzasService(
+    public PizzaService(
         IOptions<MongoDBSettings> mongoDBSettings)
     {
         var mongoClient = new MongoClient(
@@ -19,7 +19,7 @@ public class PizzasService
             mongoDBSettings.Value.DatabaseName);
 
         _pizzasCollection = mongoDatabase.GetCollection<Pizza>(
-           mongoDBSettings.Value.CollectionName);
+           mongoDBSettings.Value.CollectionNamePizza);
     }
     public async Task<List<Pizza>> GetAsync() =>
         await _pizzasCollection.Find(_ => true).ToListAsync();

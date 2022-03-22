@@ -7,6 +7,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="11.0.0" />
     <PackageReference Include="Azure.Storage.Blobs" Version="12.11.0" />
     <PackageReference Include="Azure.Storage.Files.Shares" Version="12.9.0" />
     <PackageReference Include="Bitbucket" Version="1.13.0" />
@@ -15,7 +16,10 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="DeletedPizzas\" />
+    <Folder Include="Created\Metadata\" />
+    <Folder Include="Deleted\Beverage\" />
+    <Folder Include="Deleted\Sandwitch\" />
+    <Folder Include="Deleted\Pizza\" />
   </ItemGroup>
 
 </Project>

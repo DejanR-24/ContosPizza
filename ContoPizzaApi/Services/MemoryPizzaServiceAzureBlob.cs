@@ -6,7 +6,7 @@ using Microsoft.Extensions.Options;
 
 namespace ContoPizzaApi.Services
 {
-    public class MemoryPizzaServiceAzureBlob : IBackupService
+    public class MemoryPizzaServiceAzureBlob : IBackupServiceBlob
     {
         private readonly IOptions<AzureSettings> azureSettings;
 
@@ -24,9 +24,9 @@ namespace ContoPizzaApi.Services
             BlobContainerClient containerClient = new BlobContainerClient(connectionString, containerName);
             containerClient.CreateIfNotExists();
 
-            string filePath = @".\DeletedPizzas\"; 
+            string filePath = @".\Deleted\Pizza\"; 
             string jsonString = JsonSerializer.Serialize(pizza);
-            string fileName = "deletedpizza" + Guid.NewGuid().ToString() + ".json";
+            string fileName = "deleted_Pizza" + Guid.NewGuid().ToString() + ".json";
        
             File.WriteAllText(filePath + fileName, jsonString);
 
@@ -39,15 +39,6 @@ namespace ContoPizzaApi.Services
 
         }
 
-        void IBackupService.SavePizza(Pizza pizza)
-        {
-            return;
-        }
 
-
-        void IBackupService.SavePizzaToFile(Pizza pizza)
-        {
-            return;
-        }
     }
 }

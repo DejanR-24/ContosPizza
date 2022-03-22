@@ -3,15 +3,16 @@ using MongoDB.Bson.Serialization.Attributes;
 
 namespace ContoPizzaApi.Models;
 
-public class Sandwitch
+public class Beverage
 {
     [BsonId]
     [BsonRepresentation(BsonType.ObjectId)]
-    public string? Id { get; set; }
+    public string? Id { get; set; } 
 
     [BsonElement("Name")]
-    public string Name { get; set; } = null!;
-    public bool IsWithMayo { get; set; }
+    public string Name { get; set; }  = null!;    
+
+    public bool ContainsAlcohol { get; set; }
 
 
 }

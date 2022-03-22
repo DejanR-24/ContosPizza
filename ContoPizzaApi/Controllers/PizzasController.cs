@@ -2,6 +2,7 @@
 using ContoPizzaApi.Models;
 using ContoPizzaApi.Services;
 using Microsoft.AspNetCore.Mvc;
+using AutoMapper;
 
 namespace ContoPizzaApi.Controllers;
 
@@ -9,23 +10,31 @@ namespace ContoPizzaApi.Controllers;
 [Route("api/[controller]")]
 public class PizzasController : ControllerBase
 {
-    private readonly PizzasService _pizzasService;
-    private readonly IBackupService _backupService;
+    private readonly PizzaService _pizzaService;
+    private readonly IBackupServiceBeforeDelete _backupServiceBeforeDelete;
+    private readonly IBackupServiceOnCreate _backupServiceOnCreate;
+    private readonly IBackupServiceBlob _backupServiceBlob;
+    private readonly IBackupServiceFile _backupServiceFile;
+    private readonly IMapper _mapper;
 
-    public PizzasController(PizzasService pizzasService, IBackupService backupService)
+    public PizzasController(PizzaService pizzaService, IBackupServiceBeforeDelete backupServiceBeforeDelete,IBackupServiceOnCreate backupServiceOnCreate,IBackupServiceBlob backupServiceBlob,IBackupServiceFile backupServiceFile, IMapper mapper)
     {
-        _pizzasService = pizzasService;
-        _backupService = backupService;
+        _pizzaService = pizzaService;
+        _backupServiceBeforeDelete = backupServiceBeforeDelete;
+        _backupServiceOnCreate = backupServiceOnCreate;
+        _backupServiceBlob = backupServiceBlob;
+        _backupServiceFile = backupServiceFile;
+        _mapper = mapper;
     }
 
     [HttpGet]
     public async Task<List<Pizza>> Get() => 
-        await _pizzasService.GetAsync();
+        await _pizzaService.GetAsync();
 
     [HttpGet("{id:length(24)}")]
     public async Task<ActionResult<Pizza>> Get(string id)
     {
-        var pizza = await  _pizzasService.GetAsync(id);
+        var pizza = await  _pizzaService.GetAsync(id);
 
         if (pizza is null)
         {
@@ -38,24 +47,30 @@ public class PizzasController : ControllerBase
     [HttpPost]
     public async Task<IActionResult> Post(Pizza newPizza)
     {
-        await  _pizzasService.CreateAsync(newPizza);
+        await  _pizzaService.CreateAsync(newPizza);
+
+        //Save with AutoMapper
+
+        var metadata = _mapper.Map<Metadata>(newPizza);
+        _backupServiceOnCreate.SaveOnCreate(metadata);
+
 
         return CreatedAtAction(nameof(Get), new { id = newPizza.Id }, newPizza);
     }
 
     [HttpPut("{id:length(24)}")]
-    public async Task<IActionResult> Update(string id, Pizza updatedBook)
+    public async Task<IActionResult> Update(string id, Pizza updatedPizza)
     {
-        var pizza = await  _pizzasService.GetAsync(id);
+        var pizza = await  _pizzaService.GetAsync(id);
 
         if (pizza is null)
         {
             return NotFound();
         }
 
-        updatedBook.Id = pizza.Id;
+        updatedPizza.Id = pizza.Id;
 
-        await  _pizzasService.UpdateAsync(id, updatedBook);
+        await  _pizzaService.UpdateAsync(id, updatedPizza);
 
         return NoContent();
     }
@@ -63,7 +78,7 @@ public class PizzasController : ControllerBase
     [HttpDelete("{id:length(24)}")]
     public async Task<IActionResult> Delete(string id)
     {
-        var pizza = await  _pizzasService.GetAsync(id);
+        var pizza = await  _pizzaService.GetAsync(id);
 
         if (pizza is null)
         {
@@ -71,14 +86,15 @@ public class PizzasController : ControllerBase
 
         }
 
-
-        _backupService.SavePizzaToFile(pizza);
+        _backupServiceBeforeDelete.SaveBeforeDelete(pizza);
+        _backupServiceBlob.SavePizzaToBlob(pizza);
+        _backupServiceFile.SavePizzaToFile(pizza);
 
         
-        //_backupService.SavePizzaToBlob(pizza);
-        //_backupService.SavePizza(pizza);
+        
+ 
 
-        await  _pizzasService.RemoveAsync(id);
+        await  _pizzaService.RemoveAsync(id);
 
         return NoContent();
     }

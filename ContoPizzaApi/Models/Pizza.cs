@@ -1,4 +1,5 @@
-﻿using MongoDB.Bson;
+﻿
+using MongoDB.Bson;
 using MongoDB.Bson.Serialization.Attributes;
 
 namespace ContoPizzaApi.Models;
@@ -11,5 +12,7 @@ public class Pizza
         [BsonElement("Name")]
         public string Name { get; set; } = null!;
         public bool IsGlutenFree { get; set; }
-    }
+
+
+}
 
