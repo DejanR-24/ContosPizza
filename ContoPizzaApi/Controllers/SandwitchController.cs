@@ -10,13 +10,13 @@ namespace ContoSandwitchApi.Controllers;
 [Route("api/[controller]")]
 public class SandwitchController : ControllerBase
 {
-    private readonly SandwitchService _sandwitchService;
+    private readonly ISandwitchService _sandwitchService;
     private readonly IBackupServiceBeforeDelete _backupServiceBeforeDelete;
         private readonly IBackupServiceOnCreate _backupServiceOnCreate;
     private readonly IMapper _mapper;
 
 
-    public SandwitchController(SandwitchService sandwitchService, IBackupServiceBeforeDelete backupServiceBeforeDelete,IBackupServiceOnCreate backupServiceOnCreate, IMapper mapper)
+    public SandwitchController(ISandwitchService sandwitchService, IBackupServiceBeforeDelete backupServiceBeforeDelete,IBackupServiceOnCreate backupServiceOnCreate, IMapper mapper)
     {
         _sandwitchService = sandwitchService;
         _backupServiceBeforeDelete = backupServiceBeforeDelete;

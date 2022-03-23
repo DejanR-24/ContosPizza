@@ -16,9 +16,9 @@ builder.Services.Configure<MongoDBSettings>(
 builder.Services.Configure<AzureSettings>(
     builder.Configuration.GetSection("AzureSettings"));
 
-builder.Services.AddSingleton<PizzaService>();
-builder.Services.AddSingleton<SandwitchService>();
-builder.Services.AddSingleton<BeverageService>();
+builder.Services.AddSingleton<IPizzaService,PizzaService>();
+builder.Services.AddSingleton<ISandwitchService,SandwitchService>();
+builder.Services.AddSingleton<IBeverageService,BeverageService>();
 builder.Services.AddSingleton<IBackupServiceBeforeDelete, MemoryServiceBeforeDelete>();
 builder.Services.AddSingleton<IBackupServiceOnCreate, MemoryServiceOnCreate>();
 builder.Services.AddSingleton<IBackupServiceBlob, MemoryPizzaServiceAzureBlob>();

@@ -1,11 +1,12 @@
-﻿using ContoPizzaApi.Models;
+﻿using ContoPizzaApi.Interfaces;
+using ContoPizzaApi.Models;
 using Microsoft.Extensions.Options;
 using MongoDB.Driver;
 
 
 namespace ContoPizzaApi.Services;
 
-public class PizzaService 
+public class PizzaService : IPizzaService
 {
     private readonly IMongoCollection<Pizza> _pizzasCollection;
 

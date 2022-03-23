@@ -12,13 +12,13 @@ namespace ContoPizzaApi.Controllers;
 
 public class BeverageController : Controller
 {
-    private readonly BeverageService _beverageService;
+    private readonly IBeverageService _beverageService;
     private readonly IBackupServiceBeforeDelete _backupServiceBeforeDelete;
     private readonly IBackupServiceOnCreate _backupServiceOnCreate;
     private readonly IMapper _mapper;
 
 
-    public BeverageController(BeverageService beverageService, IBackupServiceBeforeDelete backupServiceBeforeDelete, IMapper mapper,IBackupServiceOnCreate backupServiceOnCreate)
+    public BeverageController(IBeverageService beverageService, IBackupServiceBeforeDelete backupServiceBeforeDelete, IMapper mapper,IBackupServiceOnCreate backupServiceOnCreate)
     {
         _beverageService = beverageService;
         _backupServiceOnCreate = backupServiceOnCreate;

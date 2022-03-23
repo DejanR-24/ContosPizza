@@ -1,10 +1,11 @@
-﻿using ContoPizzaApi.Models;
+﻿using ContoPizzaApi.Interfaces;
+using ContoPizzaApi.Models;
 using Microsoft.Extensions.Options;
 using MongoDB.Driver;
 
 namespace ContoPizzaApi.Services;
 
-public class SandwitchService
+public class SandwitchService : ISandwitchService
 {
     private readonly IMongoCollection<Sandwitch> _sandwitchCollection;
 

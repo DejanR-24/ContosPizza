@@ -10,14 +10,14 @@ namespace ContoPizzaApi.Controllers;
 [Route("api/[controller]")]
 public class PizzasController : ControllerBase
 {
-    private readonly PizzaService _pizzaService;
+    private readonly IPizzaService _pizzaService;
     private readonly IBackupServiceBeforeDelete _backupServiceBeforeDelete;
     private readonly IBackupServiceOnCreate _backupServiceOnCreate;
     private readonly IBackupServiceBlob _backupServiceBlob;
     private readonly IBackupServiceFile _backupServiceFile;
     private readonly IMapper _mapper;
 
-    public PizzasController(PizzaService pizzaService, IBackupServiceBeforeDelete backupServiceBeforeDelete,IBackupServiceOnCreate backupServiceOnCreate,IBackupServiceBlob backupServiceBlob,IBackupServiceFile backupServiceFile, IMapper mapper)
+    public PizzasController(IPizzaService pizzaService, IBackupServiceBeforeDelete backupServiceBeforeDelete,IBackupServiceOnCreate backupServiceOnCreate,IBackupServiceBlob backupServiceBlob,IBackupServiceFile backupServiceFile, IMapper mapper)
     {
         _pizzaService = pizzaService;
         _backupServiceBeforeDelete = backupServiceBeforeDelete;
