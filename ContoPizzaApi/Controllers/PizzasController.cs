@@ -1,11 +1,13 @@
 ﻿using ContoPizzaApi.Interfaces;
 using ContoPizzaApi.Models;
-using ContoPizzaApi.Services;
+using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using AutoMapper;
+using Microsoft.AspNetCore.Cors;
 
 namespace ContoPizzaApi.Controllers;
 
+[EnableCors("MyPolicy")]
 [ApiController]
 [Route("api/[controller]")]
 public class PizzasController : ControllerBase
@@ -17,14 +19,20 @@ public class PizzasController : ControllerBase
     private readonly IBackupServiceFile _backupServiceFile;
     private readonly IMapper _mapper;
 
-    public PizzasController(IPizzaService pizzaService, IBackupServiceBeforeDelete backupServiceBeforeDelete,IBackupServiceOnCreate backupServiceOnCreate,IBackupServiceBlob backupServiceBlob,IBackupServiceFile backupServiceFile, IMapper mapper)
+    private readonly IMediator _mediator;
+
+    
+    public PizzasController(IPizzaService pizzaService, IBackupServiceBeforeDelete backupServiceBeforeDelete,IBackupServiceOnCreate backupServiceOnCreate,IBackupServiceBlob backupServiceBlob,IBackupServiceFile backupServiceFile, IMapper mapper,
+        IMediator mediator)
     {
         _pizzaService = pizzaService;
+        
         _backupServiceBeforeDelete = backupServiceBeforeDelete;
         _backupServiceOnCreate = backupServiceOnCreate;
         _backupServiceBlob = backupServiceBlob;
         _backupServiceFile = backupServiceFile;
         _mapper = mapper;
+        _mediator = mediator;
     }
 
     [HttpGet]
@@ -50,7 +58,6 @@ public class PizzasController : ControllerBase
         await  _pizzaService.CreateAsync(newPizza);
 
         //Save with AutoMapper
-
         var metadata = _mapper.Map<Metadata>(newPizza);
         _backupServiceOnCreate.SaveOnCreate(metadata);
 

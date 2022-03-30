@@ -21,7 +21,7 @@
     },
     "resourceName": {
       "type": "string",
-      "defaultValue": "ContoPizzaApi20220318151331",
+      "defaultValue": "DexContosPizzaApi",
       "metadata": {
         "description": "Name of the main resource to be created by this template."
       }
