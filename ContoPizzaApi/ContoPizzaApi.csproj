@@ -25,7 +25,6 @@
     <Folder Include="Deleted\Beverage\" />
     <Folder Include="Deleted\Sandwitch\" />
     <Folder Include="Deleted\Pizza\" />
-    <Folder Include="Commands\" />
   </ItemGroup>
 
 </Project>

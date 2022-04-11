@@ -8,9 +8,9 @@ namespace ContoPizzaApi.Interfaces
 
         Task<Pizza?> GetAsync(string id);
 
-        Task CreateAsync(Pizza newPizza);
+        Task<Pizza?> CreateAsync(Pizza newPizza);
 
-        Task UpdateAsync(string id, Pizza updatedPizza);
+        Task<Pizza?> UpdateAsync(string id, Pizza updatedPizza);
 
         Task RemoveAsync(string id);
     }

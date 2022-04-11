@@ -4,6 +4,8 @@ using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using AutoMapper;
 using Microsoft.AspNetCore.Cors;
+using ContoPizzaApi.Queries;
+using ContoPizzaApi.Commands;
 
 namespace ContoPizzaApi.Controllers;
 
@@ -18,8 +20,8 @@ public class PizzasController : ControllerBase
     private readonly IBackupServiceBlob _backupServiceBlob;
     private readonly IBackupServiceFile _backupServiceFile;
     private readonly IMapper _mapper;
-
     private readonly IMediator _mediator;
+
 
     
     public PizzasController(IPizzaService pizzaService, IBackupServiceBeforeDelete backupServiceBeforeDelete,IBackupServiceOnCreate backupServiceOnCreate,IBackupServiceBlob backupServiceBlob,IBackupServiceFile backupServiceFile, IMapper mapper,
@@ -36,73 +38,50 @@ public class PizzasController : ControllerBase
     }
 
     [HttpGet]
-    public async Task<List<Pizza>> Get() => 
-        await _pizzaService.GetAsync();
+    public async Task<IActionResult> GetAllPizzas()
+    {
+        var query = new GetAllPizzasQuery();
+        var result = await _mediator.Send(query);
+        return Ok(result);
+    }
 
     [HttpGet("{id:length(24)}")]
-    public async Task<ActionResult<Pizza>> Get(string id)
+    public async Task<IActionResult> GetPizza(string id)
     {
-        var pizza = await  _pizzaService.GetAsync(id);
-
-        if (pizza is null)
-        {
-            return NotFound();
-        }
-
-        return pizza;
+        var query = new GetPizzaByIdQuery(id);
+        var result = await _mediator.Send(query);
+        return result != null ? Ok(result) : NotFound();
     }
+
+
 
     [HttpPost]
-    public async Task<IActionResult> Post(Pizza newPizza)
+    public async Task<IActionResult> CreatePizza(Pizza newPizza)
     {
-        await  _pizzaService.CreateAsync(newPizza);
+        var command = new CreatePizzaCommand(newPizza);
+        var result = await _mediator.Send(command);
+        return result != null ? Ok(result) : NotFound();
 
-        //Save with AutoMapper
-        var metadata = _mapper.Map<Metadata>(newPizza);
-        _backupServiceOnCreate.SaveOnCreate(metadata);
-
-
-        return CreatedAtAction(nameof(Get), new { id = newPizza.Id }, newPizza);
     }
 
+
+
+
     [HttpPut("{id:length(24)}")]
-    public async Task<IActionResult> Update(string id, Pizza updatedPizza)
+    public async Task<IActionResult> Update(string id,Pizza updatedPizza)
     {
-        var pizza = await  _pizzaService.GetAsync(id);
 
-        if (pizza is null)
-        {
-            return NotFound();
-        }
-
-        updatedPizza.Id = pizza.Id;
-
-        await  _pizzaService.UpdateAsync(id, updatedPizza);
-
-        return NoContent();
+        var command = new UpdatePizzaCommand(id,updatedPizza);
+        var result = await _mediator.Send(command);
+        return result != null ? Ok(result) : NotFound();
     }
 
     [HttpDelete("{id:length(24)}")]
     public async Task<IActionResult> Delete(string id)
     {
-        var pizza = await  _pizzaService.GetAsync(id);
-
-        if (pizza is null)
-        {
-            return NotFound();
-
-        }
-
-        _backupServiceBeforeDelete.SaveBeforeDelete(pizza);
-        _backupServiceBlob.SavePizzaToBlob(pizza);
-        _backupServiceFile.SavePizzaToFile(pizza);
-
+        var command = new DeletePizzaCommand(id);
+        var result = await _mediator.Send(command);
+        return result != null ? Ok(result) : NotFound();
         
-        
- 
-
-        await  _pizzaService.RemoveAsync(id);
-
-        return NoContent();
     }
 }

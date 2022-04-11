@@ -5,7 +5,7 @@ namespace ContoPizzaApi.Queries;
 
 public class GetAllPizzasQuery : IRequest<List<Pizza>>
 {
-
+  
 
 
 }
