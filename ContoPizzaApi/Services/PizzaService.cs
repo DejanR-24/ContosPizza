@@ -28,6 +28,10 @@ public class PizzaService : IPizzaService
     public async Task<Pizza?> GetAsync(string id) =>
         await _pizzasCollection.Find(x => x.Id == id).FirstOrDefaultAsync();
 
+    public async Task<List<Pizza?>> SearchAndGetAsync() =>
+        await _pizzasCollection.Find(_ => true).ToListAsync();
+    
+
     public async Task<Pizza?> CreateAsync(Pizza newPizza) //change cause of the mediatR
     {
         await _pizzasCollection.InsertOneAsync(newPizza);

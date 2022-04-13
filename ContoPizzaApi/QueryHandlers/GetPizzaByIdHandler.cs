@@ -5,7 +5,7 @@ using ContoPizzaApi.Interfaces;
 
 namespace ContoPizzaApi.QueryHandlers;
 
-    public class GetPizzaByIdHandler : IRequestHandler<GetPizzaByIdQuery, Pizza>
+    public class GetPizzaByIdHandler : IRequestHandler<GetPizzaByIdQuery, Pizza?>
     {
         private readonly IPizzaService _pizzaService;
         public GetPizzaByIdHandler(IPizzaService pizzaService)

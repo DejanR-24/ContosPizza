@@ -14,26 +14,12 @@ namespace ContoPizzaApi.Controllers;
 [Route("api/[controller]")]
 public class PizzasController : ControllerBase
 {
-    private readonly IPizzaService _pizzaService;
-    private readonly IBackupServiceBeforeDelete _backupServiceBeforeDelete;
-    private readonly IBackupServiceOnCreate _backupServiceOnCreate;
-    private readonly IBackupServiceBlob _backupServiceBlob;
-    private readonly IBackupServiceFile _backupServiceFile;
-    private readonly IMapper _mapper;
+
     private readonly IMediator _mediator;
 
-
-    
-    public PizzasController(IPizzaService pizzaService, IBackupServiceBeforeDelete backupServiceBeforeDelete,IBackupServiceOnCreate backupServiceOnCreate,IBackupServiceBlob backupServiceBlob,IBackupServiceFile backupServiceFile, IMapper mapper,
+    public PizzasController(
         IMediator mediator)
     {
-        _pizzaService = pizzaService;
-        
-        _backupServiceBeforeDelete = backupServiceBeforeDelete;
-        _backupServiceOnCreate = backupServiceOnCreate;
-        _backupServiceBlob = backupServiceBlob;
-        _backupServiceFile = backupServiceFile;
-        _mapper = mapper;
         _mediator = mediator;
     }
 
@@ -53,6 +39,13 @@ public class PizzasController : ControllerBase
         return result != null ? Ok(result) : NotFound();
     }
 
+    [HttpGet("search={search}")]
+    public async Task<IActionResult> SearchAndGetPizzas(string search)
+    {
+        var query = new GetPizzasBySearchQuery(search);
+        var result = await _mediator.Send(query);
+        return result != null ? Ok(result) : NotFound();
+    }
 
 
     [HttpPost]
